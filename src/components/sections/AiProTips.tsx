@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { generateChiropracticTip } from "@/ai/flows/generate-chiropractic-tip";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,7 +34,7 @@ function SubmitButton() {
 }
 
 const AiProTips = () => {
-  const [state, formAction] = useFormState<AiTipState, FormData>(
+  const [state, formAction] = useActionState<AiTipState, FormData>(
     async (prevState, formData) => {
       const userInfo = formData.get("userInfo") as string;
       try {
