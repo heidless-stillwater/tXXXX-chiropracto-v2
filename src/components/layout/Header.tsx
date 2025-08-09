@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import Logo from "@/components/icons/logo";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
+import { ThemeSwitcher } from "../theme-switcher";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 const navLinks = [
   { name: "About", href: "#about" },
@@ -17,6 +19,12 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,35 +57,43 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="text-lg font-medium text-foreground/80 transition-colors hover:text-foreground"
-            >
-              {link.name}
-            </Link>
-          ))}
-        </nav>
+        {isClient && isDesktop && (
+          <nav className="hidden items-center gap-6 md:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-lg font-medium text-foreground/80 transition-colors hover:text-foreground"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+        )}
 
-        <div className="hidden items-center gap-4 md:flex">
-          <a href="tel:1234567890" className="text-lg font-semibold text-foreground">
-            1234 567 890
-          </a>
-          <Button asChild size="lg" className="text-lg">
-            <Link href="#contact">Start Here</Link>
-          </Button>
-        </div>
-
-        <div className="md:hidden">
-          <Button onClick={toggleMobileMenu} variant="ghost" size="icon">
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <ThemeSwitcher />
+          {isClient && isDesktop && (
+            <div className="hidden items-center gap-4 md:flex">
+              <a href="tel:1234567890" className="text-lg font-semibold text-foreground">
+                1234 567 890
+              </a>
+              <Button asChild size="lg" className="text-lg">
+                <Link href="#contact">Start Here</Link>
+              </Button>
+            </div>
+          )}
+           {isClient && !isDesktop && (
+             <div className="md:hidden">
+              <Button onClick={toggleMobileMenu} variant="ghost" size="icon">
+                {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </Button>
+            </div>
+           )}
         </div>
       </div>
 
-      {isMobileMenuOpen && (
+      {isClient && !isDesktop && isMobileMenuOpen && (
         <div className="absolute left-0 w-full bg-card shadow-lg md:hidden">
           <nav className="flex flex-col items-center gap-4 p-4">
             {navLinks.map((link) => (
